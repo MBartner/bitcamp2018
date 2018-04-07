@@ -4,10 +4,7 @@ var isConnected = false;
 // When the connection is open, send some data to the server
 socket.onopen = function () {
 	isConnected = true;
-  socket.send("\x01\x00\x00\x00\x06\x01\x05Hello");
-  setTimeout(function() {
-    socket.send("\x01\x00\x00\x00\x19\x03\x01" + "\x00\x00\x00\x00\x00\x00\x00\x04" + "\x00\x00\x00\x00\x00\x04\x00\x00" +"\x00\x00\x00\x00\x40\x00\x00\x00");
-  }, 3000);
+  socket.send("\x01\x00\x00\x00\x06\x02\x05Hello");
 };
 
 // Log errors
