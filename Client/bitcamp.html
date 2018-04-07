@@ -60,12 +60,20 @@
 		margin: 25px 25px 25px 25px;
 		padding: 25px 25px 25px 25px;
 	}
+
+	#controlButtons{
+		position: absolute; 
+		right: 50%;
+		bottom: 36%;
+		z-index: 1;
+	}
 </style>
 
 <script type="text/javascript">
 
 var obj;
 var zt;
+var curControl = 'rotationButton';
 
 $(document).ready(function(){
 
@@ -76,22 +84,92 @@ $(document).ready(function(){
     zt = new ZingTouch.Region(touchControlArea);
     var chainableObject = zt.bind(touchControlArea);
 
+    //var customTap = new ZingTouch.Tap({maxDelay : delay});
+
+    var moveFactor = .3;
+
     chainableObject
-	    .swipe(function(e){
-	    	console.log(e.detail);
+	    .pan(function(e){
+	    	console.log(e.detail.data[0]);
+
+	    	var dir = e.detail.data[0].currentDirection;
+
+	    	if(curControl == 'positionButton'){
+		    	//move to the right
+		    	if(dir < 45 && dir > 0 || dir > 315){
+		    		obj.object3D.position.x+=moveFactor;
+		    	}
+		    	//move up
+		    	else if(dir > 45 && dir < 135){
+		    		obj.object3D.position.z-=moveFactor;
+		    	}
+		    	//move left
+		    	else if(dir > 135 && dir < 225){
+		    		obj.object3D.position.x-=moveFactor;
+		    	}
+		    	//move down
+		    	else if(dir > 225 && dir < 315){
+		    		obj.object3D.position.z+=moveFactor;
+		    	}
+		    }
+		    else{
+		    	//rotate to the right
+		    	if(dir < 45 && dir > 0 || dir > 315){
+		    		//obj.object3D.rotation.x+=THREE.Math.degToRad(5);
+
+		    		obj.object3D.rotation.z-=THREE.Math.degToRad(5);
+		    	}
+		    	//rotate up
+		    	else if(dir > 45 && dir < 135){
+		    		//obj.object3D.rotation.z-=THREE.Math.degToRad(5);
+
+		    		obj.object3D.rotation.x-=THREE.Math.degToRad(5);
+		    	}
+		    	//rotate left
+		    	else if(dir > 135 && dir < 225){
+		    		//obj.object3D.rotation.x-=THREE.Math.degToRad(5);
+
+		    		obj.object3D.rotation.z+=THREE.Math.degToRad(5);
+		    	}
+		    	//rotate down
+		    	else if(dir > 225 && dir < 315){
+		    		//obj.object3D.rotation.z+=THREE.Math.degToRad(5);
+
+		    		obj.object3D.rotation.x+=THREE.Math.degToRad(5);
+		    	}
+		    }
 	    })
 	    .pinch(function(e){
 	    	console.log(e.detail);
+
+	    	obj.object3D.scale.multiplyScalar(.98);
 	    })
 	    .expand(function(e){
 	    	console.log(e.detail);
-	    })
-	    .rotate(function(e){
-	    	console.log(e.detail);
-	    }, true);
+
+	    	obj.object3D.scale.multiplyScalar(1.02);
+	    });
 
     console.log("ready");
 });
+
+function controlChange(button){
+
+	var otherButton = document.getElementById(curControl);
+
+	if(button.id == 'positionButton'){
+
+		curControl = 'positionButton'	
+	}
+	else{
+
+		curControl = 'rotationButton'
+	}
+
+	var curButton = document.getElementById(curControl);
+	otherButton.disabled = false;
+	curButton.disabled = true;
+}
 
 function handleObjChange(button){
 	console.log("Pressed Button: "+button.id);
@@ -115,16 +193,20 @@ function handleObjChange(button){
 		obj.object3D.position.y-=1;
 	}
 	else if(button.id == 'rotUp'){
+		
 		obj.object3D.rotation.z-=THREE.Math.degToRad(5);
 	}
 	else if(button.id == 'rotDown'){
-		obj.object3D.rotation.z+=THREE.Math.degToRad(5);	
+		
+		obj.object3D.rotation.z+=THREE.Math.degToRad(5);
 	}
 	else if(button.id == 'rotLeft'){
-		obj.object3D.rotation.x-=THREE.Math.degToRad(5);
+		
+		obj.object3D.rotation.x+=THREE.Math.degToRad(5);
 	}
 	else if(button.id == 'rotRight'){
-		obj.object3D.rotation.x+=THREE.Math.degToRad(5);
+
+		obj.object3D.rotation.x-=THREE.Math.degToRad(5);
 	}
 	else if(button.id == 'rotIn'){
 		obj.object3D.rotation.y-=THREE.Math.degToRad(5);
@@ -142,6 +224,11 @@ function handleObjChange(button){
 <body style='margin : 0px; overflow: hidden;'>
 
 	<div id='touchArea'></div>
+
+	<div id='controlButtons'>
+		<input type="button" id='positionButton' value="position" onclick='controlChange(this)'>
+		<input type="button" id='rotationButton' value="rotation" disabled onclick='controlChange(this)'>
+	</div>
 
 	<div class="grid-container rotate">
 	  <div class="grid-item"></div>
