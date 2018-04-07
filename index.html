@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head>
+<script src="./js/aframe.min.js"></script>
+<script src="./js/aframe-ar.js"></script>
+<script type="./js/touchCursor.js"></script>
+
+<script type="text/javascript">
+AFRAME.registerComponent('click-handler', {
+
+	init: function () {
+
+		var el = this.el;
+		scene = document.querySelector('#main-app-container');
+
+		console.log("INIT")
+
+		scene.addEventListener('mousedown', function(){
+
+			console.log("HIT DOWN");
+		});
+
+		scene.addEventListener('mouseup', function(){
+
+			console.log("HIT UP");
+		});
+
+		this.el.addEventListener('raycaster-intersected', function (evt) {
+
+			console.log('Player hit something!'+evt.position);
+		});
+	},
+
+	update: function () {
+
+	}
+});
+</script>
+</head>
+
+<!-- start the body of your page -->
+<body style='margin : 0px; overflow: hidden;'>
+
+	 <div style='position: fixed; top: 10px; width:100%; text-align: center; z-index: 1;'>
+		<input type="button" name="rotate" value='rotate'>
+	</div>
+
+	<!-- Define your 3d scene and enabled ar.js -->
+	<a-scene id='main-app-container' embedded arjs='sourceType: webcam;'>
+
+		<a-sphere position="0 0.5 0" radius="0.5" color="#EF2D5E"></a-sphere>
+		<a-plane position="0 0 0" rotation="-90 0 0" width="1" height="1" color="#7BC8A4"></a-plane>
+
+		<a-marker-camera preset='hiro'></a-marker-camera>
+	</a-scene>
+</body>
