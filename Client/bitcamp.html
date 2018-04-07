@@ -2,7 +2,8 @@
 <head>
 <script src="./js/aframe.min.js"></script>
 <script src="./js/aframe-ar.js"></script>
-<script type="./js/touchCursor.js"></script>
+<!-- <script type="./js/touchCursor.js"></script> -->
+<script src="./js/zingtouch.js"></script>
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -47,25 +48,54 @@
 	  font-size: 15px;
 	  text-align: center;
 	}
+
+	#touchArea{
+		background-color: rgba(255, 255, 255, 0.8);
+		position: absolute; 
+		right: 40%;
+		width: 20%;
+		height: 20%;
+		bottom: 0;
+		z-index: 1;
+		margin: 25px 25px 25px 25px;
+		padding: 25px 25px 25px 25px;
+	}
 </style>
 
 <script type="text/javascript">
 
 var obj;
+var zt;
 
 $(document).ready(function(){
 
 	sceneEl = document.querySelector("#main-app-container");
     obj = document.querySelector('#hologram');
+
+    var touchControlArea = document.querySelector('#touchArea');
+    zt = new ZingTouch.Region(touchControlArea);
+    var chainableObject = zt.bind(touchControlArea);
+
+    chainableObject
+	    .swipe(function(e){
+	    	console.log(e.detail);
+	    })
+	    .pinch(function(e){
+	    	console.log(e.detail);
+	    })
+	    .expand(function(e){
+	    	console.log(e.detail);
+	    })
+	    .rotate(function(e){
+	    	console.log(e.detail);
+	    }, true);
+
     console.log("ready");
 });
 
 function handleObjChange(button){
 	console.log("Pressed Button: "+button.id);
 
-	//obj.object3D.position.set(1, 2, 3);
-	//var obj = document.querySelector('#hologram');
-	//obj.setAttribute('position', '0, 3, 0');
 	if(button.id == 'posUp'){
 		obj.object3D.position.z-=1;
 	}
@@ -102,44 +132,16 @@ function handleObjChange(button){
 	else{
 		obj.object3D.rotation.y+=THREE.Math.degToRad(5);
 	}
-	console.log(obj.getAttribute('position'));
-	console.log(obj.getAttribute('rotation'));
+	console.log(obj.object3D.position);
+	console.log(obj.object3D.rotation);
 }
-
-// AFRAME.registerComponent('click-handler', {
-
-// 	init: function () {
-
-// 		var el = this.el;
-// 		scene = document.querySelector('#main-app-container');
-
-// 		console.log("INIT")
-
-// 		scene.addEventListener('mousedown', function(){
-
-// 			console.log("HIT DOWN");
-// 		});
-
-// 		scene.addEventListener('mouseup', function(){
-
-// 			console.log("HIT UP");
-// 		});
-
-// 		this.el.addEventListener('raycaster-intersected', function (evt) {
-
-// 			console.log('Player hit something!'+evt.position);
-// 		});
-// 	},
-
-// 	update: function () {
-
-// 	}
-// });
 </script>
 </head>
 
 <!-- start the body of your page -->
 <body style='margin : 0px; overflow: hidden;'>
+
+	<div id='touchArea'></div>
 
 	<div class="grid-container rotate">
 	  <div class="grid-item"></div>
