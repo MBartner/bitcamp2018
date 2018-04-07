@@ -1,0 +1,24 @@
+{
+  "name": "bitcamp2018",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MBartner/bitcamp2018.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MBartner/bitcamp2018/issues"
+  },
+  "homepage": "https://github.com/MBartner/bitcamp2018#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "request": "^2.85.0",
+    "ws": "^5.1.1"
+  }
+}
