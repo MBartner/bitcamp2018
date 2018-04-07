@@ -3,6 +3,10 @@
 <script src="./js/aframe.min.js"></script>
 <script src="./js/aframe-ar.js"></script>
 <script type="./js/touchCursor.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
 
 <style type="text/css">
 	
@@ -27,69 +31,176 @@
 	}
 
 	.title{
-		position: absolute;
+		position: relative;
 		top: 0;
-		width: 50%;
-		text-align: center;
+	}
+
+	.grid-container {
+  		display: grid;
+  		grid-template-columns: auto auto auto auto auto;
+  		padding: 10px;
+	}
+
+	.grid-item {
+	  background-color: rgba(255, 255, 255, 0.8);
+	  padding: 5px;
+	  font-size: 15px;
+	  text-align: center;
 	}
 </style>
 
 <script type="text/javascript">
-AFRAME.registerComponent('click-handler', {
 
-	init: function () {
+var obj;
 
-		var el = this.el;
-		scene = document.querySelector('#main-app-container');
+$(document).ready(function(){
 
-		console.log("INIT")
-
-		scene.addEventListener('mousedown', function(){
-
-			console.log("HIT DOWN");
-		});
-
-		scene.addEventListener('mouseup', function(){
-
-			console.log("HIT UP");
-		});
-
-		this.el.addEventListener('raycaster-intersected', function (evt) {
-
-			console.log('Player hit something!'+evt.position);
-		});
-	},
-
-	update: function () {
-
-	}
+	sceneEl = document.querySelector("#main-app-container");
+    obj = document.querySelector('#hologram');
+    console.log("ready");
 });
+
+function handleObjChange(button){
+	console.log("Pressed Button: "+button.id);
+
+	//obj.object3D.position.set(1, 2, 3);
+	//var obj = document.querySelector('#hologram');
+	//obj.setAttribute('position', '0, 3, 0');
+	if(button.id == 'posUp'){
+		obj.object3D.position.z-=1;
+	}
+	else if(button.id == 'posDown'){
+		obj.object3D.position.z+=1;
+	}
+	else if(button.id == 'posRight'){
+		obj.object3D.position.x+=1;
+	}
+	else if(button.id == 'posLeft'){
+		obj.object3D.position.x-=1;
+	}
+	else if(button.id == 'posOut'){
+		obj.object3D.position.y+=1;
+	}
+	else if(button.id == 'posIn'){
+		obj.object3D.position.y-=1;
+	}
+	else if(button.id == 'rotUp'){
+		obj.object3D.rotation.z-=THREE.Math.degToRad(5);
+	}
+	else if(button.id == 'rotDown'){
+		obj.object3D.rotation.z+=THREE.Math.degToRad(5);	
+	}
+	else if(button.id == 'rotLeft'){
+		obj.object3D.rotation.x-=THREE.Math.degToRad(5);
+	}
+	else if(button.id == 'rotRight'){
+		obj.object3D.rotation.x+=THREE.Math.degToRad(5);
+	}
+	else if(button.id == 'rotIn'){
+		obj.object3D.rotation.y-=THREE.Math.degToRad(5);
+	}
+	else{
+		obj.object3D.rotation.y+=THREE.Math.degToRad(5);
+	}
+	console.log(obj.getAttribute('position'));
+	console.log(obj.getAttribute('rotation'));
+}
+
+// AFRAME.registerComponent('click-handler', {
+
+// 	init: function () {
+
+// 		var el = this.el;
+// 		scene = document.querySelector('#main-app-container');
+
+// 		console.log("INIT")
+
+// 		scene.addEventListener('mousedown', function(){
+
+// 			console.log("HIT DOWN");
+// 		});
+
+// 		scene.addEventListener('mouseup', function(){
+
+// 			console.log("HIT UP");
+// 		});
+
+// 		this.el.addEventListener('raycaster-intersected', function (evt) {
+
+// 			console.log('Player hit something!'+evt.position);
+// 		});
+// 	},
+
+// 	update: function () {
+
+// 	}
+// });
 </script>
 </head>
 
 <!-- start the body of your page -->
 <body style='margin : 0px; overflow: hidden;'>
 
-	<div class='rotate'>
-		<p class='title'>Rotation</p>
-		<input type="button" value='up'>
-		<input type="button" value='down'>
-		<input type="button" value='left'>
-		<input type="button" value='right'>
+	<div class="grid-container rotate">
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item">Rotation</div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
+
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='rotUp' value='Up'></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
+
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='rotLeft' value='Left'></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='rotIn' value='Out'></div>
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='rotOut' value='Out'></div>
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='rotRight' value='Right'></div>
+
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='rotDown' value='Down'></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
 	</div>
 
-	<div class='position'>
-		<input type="button" value='up'>
-		<input type="button" value='down'>
-		<input type="button" value='left'>
-		<input type="button" value='right'>
+	<div class="grid-container position">
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item">Position</div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
+
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='posUp' value='Up'></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
+
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='posLeft' value='Left'></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='posIn' value='In'></div>
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='posOut' value='Out'></div>
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='posRight' value='Right'></div>
+
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"><input type="button" onclick='handleObjChange(this)' id='posDown' value='Down'></div>
+	  <div class="grid-item"></div>
+	  <div class="grid-item"></div>
 	</div>
 
 	<!-- Define your 3d scene and enabled ar.js -->
 	<a-scene id='main-app-container' embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
+		
+		<a-entity id='hologram' position='0 0 0'>
+			<a-sphere position="0 0.5 0" radius="0.5" color="#EF2D5E"></a-sphere>
+			<a-plane position="0 0 0" rotation="-90 0 0" width="1" height="1" color="#7BC8A4"></a-plane>
+		</a-entity>
 
-		<a-sphere position="0 0.5 0" radius="0.5" color="#EF2D5E"></a-sphere>
-		<a-plane position="0 0 0" rotation="-90 0 0" width="1" height="1" color="#7BC8A4"></a-plane>
 
 		<a-marker-camera preset='hiro'></a-marker-camera>
 	</a-scene>
