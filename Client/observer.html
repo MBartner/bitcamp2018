@@ -2,7 +2,11 @@
 <head>
 <script src="./js/aframe.min.js"></script>
 <script src="./js/aframe-ar.js"></script>
-<script type="./js/touchCursor.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -51,6 +55,39 @@
 
 <script type="text/javascript">
 
+var obj=null;
+
+$(document).ready(function(){
+
+	obj = document.querySelector('#hologram');
+});
+
+function update(type, x, y, z){
+
+	if(obj == null) return false;
+
+	//position
+	if(type == 0){
+
+		obj.object3D.position.x = x;
+		obj.object3D.position.y = y;
+		obj.object3D.position.z = z;
+	}
+	//rotate
+	else if(type == 1){
+
+		obj.object3D.rotation.x = x;
+		obj.object3D.rotation.y = y;
+		obj.object3D.rotation.z = z;
+	}
+	//scale
+	else{
+
+		//for scale the x coordinate is the factor that we are scaling by
+		//if scaling up x>1 and if scaling down x<1
+		obj.object3D.scale.multiplyScalar(x);
+	}
+}
 </script>
 </head>
 
