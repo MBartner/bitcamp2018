@@ -9,6 +9,8 @@ var joinCallback;
 var updateCallback;
 var leaveCallback;
 
+socket = new WebSocket('ws://127.0.0.1:3000');
+
 socket.onopen = function () {
 	isConnected = true;
 };
@@ -64,6 +66,7 @@ function processData(){
 function handleHost(len, data){
 	if(!(len == 1 || len == 2)){
 		console.error("handleHost(): Invalid message length.");
+		return;
 	}
 
 	if(len == 1){
@@ -79,6 +82,7 @@ function handleHost(len, data){
 function handleJoin(len, data){
 	if(!(len == 1 || len == 2)){
 		console.error("handleJoin(): Invalid message length.");
+		return;
 	}
 
 	if(len == 1){ // Success
@@ -108,6 +112,7 @@ function handleUpdate(len, data){
 function handleLeave(len, data){
 	if(!(len == 1 || len == 2)){
 		console.error("handleJoin(): Invalid message length.");
+		return;
 	}
 
 	if(len == 1){
@@ -117,11 +122,6 @@ function handleLeave(len, data){
 	else{
 		leaveCallback(data.charCodeAt(1));
 	}
-}
-
-function connect(){
-	socket = new WebSocket('ws://127.0.0.1:3000');
-	return 0;
 }
 
 function disconnect(){
@@ -175,7 +175,7 @@ function join(sessionName, callbackJoin, callbackUpdate){
 }
 
 // Return- 0:success, 1: Not connected, 2: Not hosting
-function update(type, x, y, z){
+function sendUpdate(type, x, y, z){
 	var len = 25;
 	if(!isConnected){
 		return 1;
