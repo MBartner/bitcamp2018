@@ -4,6 +4,8 @@
 <script src="./js/aframe-ar.js"></script>
 <!-- <script type="./js/touchCursor.js"></script> -->
 <script src="./js/zingtouch.js"></script>
+<script src="./js/websocket.js"></script>
+
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -101,6 +103,7 @@
 var obj;
 var zt;
 var curControl = 'rotationButton';
+var state = 0;
 
 $(document).ready(function(){
 
@@ -111,7 +114,19 @@ $(document).ready(function(){
     zt = new ZingTouch.Region(touchControlArea);
     var chainableObject = zt.bind(touchControlArea);
 
-    //var customTap = new ZingTouch.Tap({maxDelay : delay});
+    connect(function(){
+    	host('Bob', function(result){
+
+    		//success
+    		if(result == 0){
+    			//state is hosting (2)
+    			state = 2;
+    		}
+    		else{
+    			//error
+    		}
+    	});
+    });
 
     var moveFactor = .3;
 
@@ -137,6 +152,11 @@ $(document).ready(function(){
 		    	//move down
 		    	else if(dir > 225 && dir < 315){
 		    		obj.object3D.position.z+=moveFactor;
+		    	}
+
+		    	//if properly connected then send the updated coordinates
+		    	if(state == 2){
+		    		sendUpdate(0, obj.object3D.position.x, obj.object3D.position.z, obj.object3D.position.z)
 		    	}
 		    }
 		    else{
@@ -164,17 +184,32 @@ $(document).ready(function(){
 
 		    		obj.object3D.rotation.x+=THREE.Math.degToRad(5);
 		    	}
+
+		    	//if properly connected then send the updated coordinates
+		    	if(state == 2){
+		    		sendUpdate(1, obj.object3D.rotation.x, obj.object3D.rotation.z, obj.object3D.rotation.z);
+		    	}
 		    }
 	    })
 	    .pinch(function(e){
 	    	console.log(e.detail);
 
 	    	obj.object3D.scale.multiplyScalar(.98);
+
+	    	//if properly connected then send the updated coordinates
+	    	if(state == 2){
+	    		sendUpdate(2, .98, -1, -1);
+	    	}
 	    })
 	    .expand(function(e){
 	    	console.log(e.detail);
 
 	    	obj.object3D.scale.multiplyScalar(1.02);
+
+	    	//if properly connected then send the updated coordinates
+	    	if(state == 2){
+	    		sendUpdate(2, 1.02, -1, -1);
+	    	}
 	    });
 
     console.log("ready");

@@ -56,13 +56,25 @@
 <script type="text/javascript">
 
 var obj=null;
+var state = 0;
 
 $(document).ready(function(){
 
 	obj = document.querySelector('#hologram');
+
+	connect(function(){
+		join('Bob', function(res){
+			if(res == 0){
+				state = 1;
+			}
+			else{
+				//error
+			}
+		}, callbackUpdate);
+	});
 });
 
-function update(type, x, y, z){
+function callbackUpdate(type, x, y, z){
 
 	if(obj == null) return false;
 
