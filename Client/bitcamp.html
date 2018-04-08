@@ -91,7 +91,7 @@
 	    	margin-left: 100%;
 	    	position: absolute;
 	    	margin-left: 100%;
-	    	bottom: 4%;
+	    	bottom: 10%;
 	    	z-index: 1;
 	    	right: auto;
 	    }
@@ -156,7 +156,7 @@ $(document).ready(function(){
 
 		    	//if properly connected then send the updated coordinates
 		    	if(conn == 2){
-		    		sendUpdate(0, obj.object3D.position.x, obj.object3D.position.z, obj.object3D.position.z)
+		    		sendUpdate(0, obj.object3D.position.x, obj.object3D.position.y, obj.object3D.position.z);
 		    	}
 		    }
 		    else{
@@ -187,7 +187,7 @@ $(document).ready(function(){
 
 		    	//if properly connected then send the updated coordinates
 		    	if(conn == 2){
-		    		sendUpdate(1, obj.object3D.rotation.x, obj.object3D.rotation.z, obj.object3D.rotation.z);
+		    		sendUpdate(1, obj.object3D.rotation.x, obj.object3D.rotation.y, obj.object3D.rotation.z);
 		    	}
 		    }
 	    })
