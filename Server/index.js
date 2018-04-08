@@ -110,9 +110,9 @@ function handleJoin(socket, len, data){
 	console.log("Client " + socket.id + " joined: " + name);
 }
 
-var MOVE = 0x01;
-var ROTATE = 0x02;
-var SCALE = 0x03;
+var MOVE = 0x00;
+var ROTATE = 0x01;
+var SCALE = 0x02;
 
 function handleUpdate(socket, len, data){
 	if(!(socket in hosts)){
