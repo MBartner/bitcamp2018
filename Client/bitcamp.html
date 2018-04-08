@@ -103,7 +103,7 @@
 var obj;
 var zt;
 var curControl = 'rotationButton';
-var state = 0;
+var conn = 0;
 
 $(document).ready(function(){
 
@@ -120,7 +120,7 @@ $(document).ready(function(){
     		//success
     		if(result == 0){
     			//state is hosting (2)
-    			state = 2;
+    			conn = 2;
     		}
     		else{
     			//error
@@ -155,7 +155,7 @@ $(document).ready(function(){
 		    	}
 
 		    	//if properly connected then send the updated coordinates
-		    	if(state == 2){
+		    	if(conn == 2){
 		    		sendUpdate(0, obj.object3D.position.x, obj.object3D.position.z, obj.object3D.position.z)
 		    	}
 		    }
@@ -186,7 +186,7 @@ $(document).ready(function(){
 		    	}
 
 		    	//if properly connected then send the updated coordinates
-		    	if(state == 2){
+		    	if(conn == 2){
 		    		sendUpdate(1, obj.object3D.rotation.x, obj.object3D.rotation.z, obj.object3D.rotation.z);
 		    	}
 		    }
@@ -197,7 +197,7 @@ $(document).ready(function(){
 	    	obj.object3D.scale.multiplyScalar(.98);
 
 	    	//if properly connected then send the updated coordinates
-	    	if(state == 2){
+	    	if(conn == 2){
 	    		sendUpdate(2, .98, -1, -1);
 	    	}
 	    })
@@ -207,7 +207,7 @@ $(document).ready(function(){
 	    	obj.object3D.scale.multiplyScalar(1.02);
 
 	    	//if properly connected then send the updated coordinates
-	    	if(state == 2){
+	    	if(conn == 2){
 	    		sendUpdate(2, 1.02, -1, -1);
 	    	}
 	    });

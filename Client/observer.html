@@ -57,7 +57,7 @@
 <script type="text/javascript">
 
 var obj=null;
-var state = 0;
+var conn = 0;
 
 $(document).ready(function(){
 
@@ -66,7 +66,7 @@ $(document).ready(function(){
 	connect(function(){
 		join('Bob', function(res){
 			if(res == 0){
-				state = 1;
+				conn = 1;
 			}
 			else{
 				//error
@@ -76,6 +76,8 @@ $(document).ready(function(){
 });
 
 function callbackUpdate(type, x, y, z){
+
+	console.log('Updating the client!');
 
 	if(obj == null) return false;
 
