@@ -18,6 +18,8 @@
   "homepage": "https://github.com/MBartner/bitcamp2018#readme",
   "dependencies": {
     "express": "^4.16.3",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
     "request": "^2.85.0",
     "ws": "^5.1.1"
   }
