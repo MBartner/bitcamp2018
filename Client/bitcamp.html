@@ -67,6 +67,33 @@
 		bottom: 36%;
 		z-index: 1;
 	}
+
+	@media only screen and (max-width: 600px) {
+	    .grid-container{
+	    	visibility: hidden;
+	    }
+
+	    #touchArea{
+	    	margin: 0;
+	    	padding: 0; 
+	    	background-color: rgba(255, 255, 255, 0.0);
+	    	z-index: 1;
+	    	position:absolute;
+		    left: 0;
+		    top: 0;
+		    width: 100%;
+		    height: 100%;
+	    }
+
+	    #controlButtons{
+	    	margin-left: 100%;
+	    	position: absolute;
+	    	margin-left: 100%;
+	    	bottom: 4%;
+	    	z-index: 1;
+	    	right: auto;
+	    }
+	}
 </style>
 
 <script type="text/javascript">
@@ -202,11 +229,11 @@ function handleObjChange(button){
 	}
 	else if(button.id == 'rotLeft'){
 		
-		obj.object3D.rotation.x+=THREE.Math.degToRad(5);
+		obj.object3D.rotation.x-=THREE.Math.degToRad(5);
 	}
 	else if(button.id == 'rotRight'){
 
-		obj.object3D.rotation.x-=THREE.Math.degToRad(5);
+		obj.object3D.rotation.x+=THREE.Math.degToRad(5);
 	}
 	else if(button.id == 'rotIn'){
 		obj.object3D.rotation.y-=THREE.Math.degToRad(5);
