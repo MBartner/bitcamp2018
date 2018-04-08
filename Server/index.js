@@ -20,6 +20,7 @@ var clients = {};
 wss.on('connection', function connection(ws) {
 	ws.id = id++;
 	clients[ws.id] = ws;
+	console.log("New connection.");
 	ws.on('message', function incoming(data) {
 		processData(ws, data);
 	});
@@ -48,15 +49,22 @@ function processData(socket, data){
 
 	if(command == 0x01){
 		handleHost(socket, len, data.substring(6));
+		console.log("handleHost()");
 	}
-	if(command == 0x02){
+	else if(command == 0x02){
 		handleJoin(socket, len, data.substring(6));
+		console.log("handleJoin()");
 	}
-	if(command == 0x03){
+	else if(command == 0x03){
 		handleUpdate(socket, len, data.substring(6));
+		console.log("handleUpdate()");
 	}
-	if(command == 0x04){
+	else if(command == 0x04){
 		handleLeave(socket, len, data.substring(6));
+		console.log("handleLeave()");
+	}
+	else{
+		logErr("processData", "Invalid command.");
 	}
 }
 
@@ -97,6 +105,7 @@ function handleJoin(socket, len, data){
 	}
 
 	sessions[name].push(socket.id);
+	console.log("pushed id: " + socket.id);
 	sendSuccess(socket, "\x20");
 	console.log("Client " + socket.id + " joined: " + name);
 }
@@ -118,14 +127,20 @@ function handleUpdate(socket, len, data){
 		return;
 	}
 
-	var message = "\x01\x00\x00\x00\x19\x30" + data;
-	var id;
-	for (id in sessions[hosts[socket]]){
-		if(clients[id].readyState === WebSocket.OPEN) {
-			clients[id].send(message);
+	var message = "\x01" + intToByteString(len) + "\x30" + data;
+	var key;
+	console.log("IDs in session:");
+	for(key in sessions[hosts[socket]]){
+		console.log(id);
+		if(clients[sessions[hosts[socket]][key]].readyState === WebSocket.OPEN) {
+			clients[sessions[hosts[socket]][key]].send(message);
 		}
 	}
 	console.log("Session \"" + hosts[socket] + "\" updated.");
+}
+
+function intToByteString(n){
+	return String.fromCharCode((n >> 24) & 0xFF) + String.fromCharCode((n >> 16) & 0xFF) + String.fromCharCode((n >> 8) & 0xFF) + String.fromCharCode(n & 0xFF);
 }
 
 function handleLeave(socket, len, data){
@@ -160,11 +175,11 @@ var FAILURE = 0x00;
 var SUCCESS = 0x01;
 
 function sendSuccess(socket, code){
-	socket.send("\x01\x00\x00\x00\x01" + code + SUCCESS);
+	socket.send("\x01\x00\x00\x00\x01" + code + String.fromCharCode(SUCCESS));
 }
 
 function sendFailure(socket, code, errCode){
-	socket.send("\x01\x00\x00\x00\x02" + code + FAILURE + errCode);
+	socket.send("\x01\x00\x00\x00\x02" + code + String.fromCharCode(FAILURE) + errCode);
 }
 
 function endSession(sessionName){
