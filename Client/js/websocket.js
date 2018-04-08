@@ -197,7 +197,7 @@ function handleUpdate(len, data){
 	var zLen = data.charCodeAt(currIndex + xLen);
 	currIndex = currIndex + yLen + 1;
 	var z = data.substring(currIndex, currIndex + zLen);
-	updateCallback(type, x, y, z);
+	updateCallback(type, Number(x), Number(y), Number(z));
 }
 
 function handleLeave(len, data){
