@@ -23,7 +23,7 @@ function connect(callback){
 	};
 
 	socket.onerror = function (err) {
-		console.log('WebSocket Error ' + err);
+		console.log('WebSocket Error ' + err.data);
 	};
 
 	socket.onmessage = function (e) {
