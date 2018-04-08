@@ -3,7 +3,8 @@
 			Server Codde		Client Code		Errors
 	Host 	0x10				0x01 			1: Invalid session name. 2: Session name already in use.
 	Join 	0x20 				0x02 			1: Invalid session name. 2: Session doesn't exist.
-	Update 	0x30 				0x03 			1: Client not hosting session. 2: Illegal message format. 3: Illegal movement code.
+	Update 	0x30 				0x03 			1: Client not hosting session. 2: Illegal movement code.
+	Leave 	0x40 				0x04 			1: Invalid name length
 */
 
 var WebSocket = require('ws');
@@ -54,6 +55,9 @@ function processData(socket, data){
 	if(command == 0x03){
 		handleUpdate(socket, len, data.substring(6));
 	}
+	if(command == 0x04){
+		handleLeave(socket, len, data.substring(6));
+	}
 }
 
 function handleHost(socket, len, data){
@@ -94,7 +98,7 @@ function handleJoin(socket, len, data){
 
 	sessions[name].push(socket.id);
 	sendSuccess(socket, "\x20");
-	console.log("Client joined: " + name);
+	console.log("Client " + socket.id + " joined: " + name);
 }
 
 var MOVE = 0x01;
@@ -107,15 +111,10 @@ function handleUpdate(socket, len, data){
 		sendFailure(socket, "\x30", "\x01");
 		return;
 	}
-	if(len != 25){
-		logErr("handleUpdate", "Illegal message format.");
-		sendFailure(socket, "\x30", "\x02");
-		return;
-	}
 	var type = data.charCodeAt(0);
 	if(!(type == MOVE || type == ROTATE || type == SCALE)){
 		logErr("handleUpdate", "Illegal movement code.");
-		sendFailure(socket, "\x30", "\x03");
+		sendFailure(socket, "\x30", "\x02");
 		return;
 	}
 
@@ -126,7 +125,35 @@ function handleUpdate(socket, len, data){
 			clients[id].send(message);
 		}
 	}
-	console.log("Session \"" + sessions[hosts[socket]] + "\" updated.");
+	console.log("Session \"" + hosts[socket] + "\" updated.");
+}
+
+function handleLeave(socket, len, data){
+	var nameLen = data.charCodeAt(0);
+	if(nameLen === 0 || nameLen + 1 > len){
+		logErr("handleLeave", "Invalid name length.");
+		sendFailure(socket, "\x40", "\x01");
+		return;
+	}
+	var name = data.substring(1, 1 + nameLen);
+	if(!(name in sessions)){
+		logErr("handleLeave", "Session doesn't exist.");
+		sendFailure(socket, "\x40", "\x02");
+		return;
+	}
+	if(!(socket.id in sessions[name])){
+		logErr("handleLeave", "Client not in session.");
+		sendFailure(socket, "\x40", "\x03");
+		return;
+	}
+
+	for(var i = sessions[name].length - 1; i >= 0; i--){
+		if(socket.id == sessions[name[i]]){
+			sessions[name].splice(i, 1);
+		}
+	}
+	sendSuccess(socket, "\x40");
+	console.log("Client " + socket.id + " left " + name);
 }
 
 var FAILURE = 0x00;
